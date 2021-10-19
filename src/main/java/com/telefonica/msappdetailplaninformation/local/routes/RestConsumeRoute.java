@@ -46,15 +46,7 @@ public class RestConsumeRoute extends RouteBuilder {
                 .type(RestParamType.header)
                 .required(true) // false
                 .endParam()
-                /*.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                .setHeader("system", constant("S"))
-                .setHeader("operation", constant("a"))
-                .setHeader("execid", constant("s"))
-                .setHeader("timestamp", constant("2021"))
-                .setHeader("msgtype", constant("REQUEST"))*/
-                .to("direct-vm:consumeWsGetSubscriber")
-        //.setBody(() -> subscriberService.subscriberAll())
-        //.log("response WS REST : ${body}")
+                .to("direct-vm:consumeWs")
         ;
 
 

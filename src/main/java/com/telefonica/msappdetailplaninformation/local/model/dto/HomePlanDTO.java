@@ -1,19 +1,23 @@
 package com.telefonica.msappdetailplaninformation.local.model.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-public @Data class HomePlanDTO{
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class HomePlanDTO{
 
-	private String planType;
-	private String planName;
-	private String subscriptionNumberPlan;
-	private String accountNumberPlan;
-	private String planCode;
-	private int planValueTotal;
-	private String installationAddress;
-	private String activateDatePlan;
+	private String planType; //
+	private String planName; //
+	private String subscriptionNumberPlan; //
+	private String accountNumberPlan;//
+	private String planCode;//
+	private double planValueTotal;//
+	private String installationAddress;//->falta
+	private String activateDatePlan;//
 	private List<PrincipalProductsItemDTO> principalProducts;
 	private List<SupplementaryProductsItemDTO> supplementaryProducts;
 }

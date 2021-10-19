@@ -35,14 +35,14 @@ public class RestConsumeRoute extends RouteBuilder {
 
         //rest().get("/subscriber").produces(MediaType.APPLICATION_JSON).route().setBody(()->subscriberService.subscriberAll());
 
-        rest().get("/subscriberInfo")
+        rest().get("/detailPlanInformationByServiceAccountId")
                 //.route().routeId("rest-subscriber-info")
                 //.to("direct:consumeWsGetSubscriber")
                 //.removeHeader("CamelHttp*")
                 .id("consumir-enpoint")
                 .produces(MediaType.APPLICATION_JSON)
                 .param()
-                .name("system")
+                .name("accountId")
                 .type(RestParamType.header)
                 .required(true) // false
                 .endParam()

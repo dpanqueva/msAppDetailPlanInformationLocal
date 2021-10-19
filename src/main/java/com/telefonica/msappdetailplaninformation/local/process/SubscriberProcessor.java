@@ -9,14 +9,13 @@ import org.apache.camel.Processor;
  * */
 public class SubscriberProcessor implements Processor {
 
+    /** method for process information*/
     @Override
     public void process(Exchange exchange) throws Exception {
         /** convert response to object and save into properties map*/
         RSSubsWrapper rsSubsWrapper = exchange.getIn().getBody(RSSubsWrapper.class);
         exchange.setProperty("obj-subs-info", rsSubsWrapper);
-
         // guardar objeto homePlan properties
-
         // guardar los bodys dentro de los properties para obtenerlos y armar la respuesta
     }
 }

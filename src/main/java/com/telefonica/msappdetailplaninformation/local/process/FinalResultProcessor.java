@@ -1,8 +1,6 @@
 package com.telefonica.msappdetailplaninformation.local.process;
 
-import com.telefonica.msappdetailplaninformation.local.model.dto.HomePlanDTO;
-import com.telefonica.msappdetailplaninformation.local.model.dto.PrincipalProductsItemDTO;
-import com.telefonica.msappdetailplaninformation.local.model.dto.SupplementaryProductsItemDTO;
+import com.telefonica.msappdetailplaninformation.local.model.dto.*;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.invoice.RSInvoiceWrapper;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.purchased.RSPurchasedWrapper;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.subscriber.info.RSSubsWrapper;
@@ -70,16 +68,17 @@ public class FinalResultProcessor implements Processor {
         List<SupplementaryProductsItemDTO> lstSupplementaryProductsItemDTO = new ArrayList<>();
         rsPurchasedWrapper.getQueryPurchasedOfferingResponse().getRspBodyQPOItem().getOfferingInstanceQPOItem()
                 .forEach(qp -> {
-                    String value = (qp.getPropertyQPOItem().size() > 1)?qp.getPropertyQPOItem().stream().filter(q -> q.getIdParameter().equalsIgnoreCase("OFFER_PRICE"))
-                            .findFirst().orElse(null).getValueParameter():"";
+                    String value = (qp.getPropertyQPOItem().size() > 1) ? qp.getPropertyQPOItem().stream().filter(q -> q.getIdParameter().equalsIgnoreCase("OFFER_PRICE"))
+                            .findFirst().orElse(null).getValueParameter() : "";
                     lstSupplementaryProductsItemDTO.add(new SupplementaryProductsItemDTO(qp.getNameProductOffering(), qp.getOfferingDescriptionInfo()
                             , "", qp.getEndDateTimeTimePeriod(), "", value));
                 });
 
         homePlanDTO.setSupplementaryProducts(lstSupplementaryProductsItemDTO);
 
+
         /** save new response and assign to body*/
-        exchange.getIn().setBody(homePlanDTO);
+        exchange.getIn().setBody(new ResponseDTO(homePlanDTO, EResponseType.SUCCESS, "SUCCESS", "200"));
 
         // guardar los bodys dentro de los properties para obtenerlos y armar la respuesta
     }

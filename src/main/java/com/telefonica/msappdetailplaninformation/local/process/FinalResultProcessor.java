@@ -78,7 +78,7 @@ public class FinalResultProcessor implements Processor {
 
 
         /** save new response and assign to body*/
-        exchange.getIn().setBody(new ResponseDTO(homePlanDTO, EResponseType.SUCCESS, "SUCCESS", "200"));
+        exchange.getIn().setBody(new ResponseDTO<HomePlanDTO>(homePlanDTO, EResponseType.SUCCESS, "SUCCESS", "200"));
 
         // guardar los bodys dentro de los properties para obtenerlos y armar la respuesta
     }

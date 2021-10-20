@@ -1,5 +1,6 @@
 package com.telefonica.msappdetailplaninformation.local.bean;
 
+import com.telefonica.msappdetailplaninformation.local.exceptions.BadRequestException;
 import com.telefonica.msappdetailplaninformation.local.model.dto.EResponseType;
 import com.telefonica.msappdetailplaninformation.local.model.dto.HomePlanDTO;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ResponseDTO;
@@ -42,7 +43,12 @@ public class ResponseHandlerDPH {
                 responseDTO.setMessage("Unexpected error");
                 exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, "500");
             }
-        } else {
+        } if(exception instanceof BadRequestException ){
+            responseDTO.setType(EResponseType.BAD_REQUEST);
+            responseDTO.setCode("400");
+            responseDTO.setMessage(((BadRequestException) exception).getMessage());
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, "400");
+        }else {
             responseDTO.setType(EResponseType.ERROR);
             responseDTO.setCode("500");
             responseDTO.setMessage("Unexpected error");

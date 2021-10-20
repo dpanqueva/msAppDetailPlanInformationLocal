@@ -1,6 +1,8 @@
 package com.telefonica.msappdetailplaninformation.local.routes;
 
 import com.telefonica.msappdetailplaninformation.local.bean.ResponseHandlerDPH;
+import com.telefonica.msappdetailplaninformation.local.bean.ValidateHeadersBeanDPH;
+import com.telefonica.msappdetailplaninformation.local.exceptions.BadRequestException;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.invoice.RSInvoiceWrapper;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.purchased.RSPurchasedWrapper;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.subscriber.info.RSSubsWrapper;
@@ -8,7 +10,6 @@ import com.telefonica.msappdetailplaninformation.local.process.*;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +27,20 @@ public class RouteSubscriberInformation extends RouteBuilder {
                 .log(LoggingLevel.INFO, "Build error")
                 .process(new DPHHeaderResponseProcessor())
                 .end();
+        onException(BadRequestException.class)
+                .handled(true)
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
+                .log(LoggingLevel.ERROR, "Bad request error")
+                .bean(ResponseHandlerDPH.class)
+                .marshal().json(JsonLibrary.Jackson)
+                .log(LoggingLevel.INFO, "Build error")
+                .process(new DPHHeaderResponseProcessor())
+                .end();
 
         from("direct-vm:consumeWs")
                 .routeId("all-service-subscriber")
                 .removeHeader(Exchange.HTTP_PATH)
+                .bean(new ValidateHeadersBeanDPH())
                 //.bean(ValidateHeadersBean.class)
                 //.removeHeader("CamelHttp*")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
@@ -70,6 +81,6 @@ public class RouteSubscriberInformation extends RouteBuilder {
                 .unmarshal().json(JsonLibrary.Jackson, RSInvoiceWrapper.class)
                 .process(new DetailInvoiceProcessor())
                 .log("response WS REST subscriberInformation : ${body}")
-                ;
+        ;
     }
 }

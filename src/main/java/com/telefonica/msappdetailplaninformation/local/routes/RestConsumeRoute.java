@@ -90,6 +90,11 @@ public class RestConsumeRoute extends RouteBuilder {
                 .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
                 .responseModel(ResponseDTO.class)
                 .endResponseMessage()
+                .responseMessage()
+                .code(HttpStatus.NO_CONTENT.value())
+                .message(HttpStatus.NO_CONTENT.name())
+                .responseModel(ResponseDTO.class)
+                .endResponseMessage()
                 .to("direct-vm:consumeWs")
 
         ;

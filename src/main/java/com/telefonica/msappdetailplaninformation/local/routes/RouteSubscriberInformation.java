@@ -3,6 +3,7 @@ package com.telefonica.msappdetailplaninformation.local.routes;
 import com.telefonica.msappdetailplaninformation.local.bean.ResponseHandlerDPH;
 import com.telefonica.msappdetailplaninformation.local.bean.ValidateHeadersBeanDPH;
 import com.telefonica.msappdetailplaninformation.local.exceptions.BadRequestException;
+import com.telefonica.msappdetailplaninformation.local.exceptions.NoContentException;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.invoice.RSInvoiceWrapper;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.purchased.RSPurchasedWrapper;
 import com.telefonica.msappdetailplaninformation.local.model.dto.ws.client.subscriber.info.RSSubsWrapper;
@@ -31,6 +32,15 @@ public class RouteSubscriberInformation extends RouteBuilder {
                 .handled(true)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
                 .log(LoggingLevel.ERROR, "Bad request error")
+                .bean(ResponseHandlerDPH.class)
+                .marshal().json(JsonLibrary.Jackson)
+                .log(LoggingLevel.INFO, "Build error")
+                .process(new DPHHeaderResponseProcessor())
+                .end();
+        onException(NoContentException.class)
+                .handled(true)
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(204))
+                .log(LoggingLevel.ERROR, "No Content")
                 .bean(ResponseHandlerDPH.class)
                 .marshal().json(JsonLibrary.Jackson)
                 .log(LoggingLevel.INFO, "Build error")
